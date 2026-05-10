@@ -139,3 +139,10 @@
   background-clip: text;
   color: transparent;
 }
+
+@media print {
+  body * { visibility: hidden !important; }
+  #cv-print-area, #cv-print-area * { visibility: visible !important; }
+  #cv-print-area { position: absolute; inset: 0; margin: 0; max-width: none; border-radius: 0 !important; box-shadow: none !important; }
+  @page { size: A4; margin: 0; }
+}

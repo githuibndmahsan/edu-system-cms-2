@@ -62,6 +62,84 @@ export type Database = {
         }
         Relationships: []
       }
+      teachers: {
+        Row: {
+          achievements: string[]
+          bio: string | null
+          certifications: Json
+          created_at: string
+          department: string | null
+          designation: string
+          email: string | null
+          experiences: Json
+          facebook_url: string | null
+          full_name: string
+          id: string
+          is_published: boolean
+          languages: string[]
+          linkedin_url: string | null
+          phone: string | null
+          photo_path: string | null
+          qualifications: Json
+          resume_path: string | null
+          skills: string[]
+          sort_order: number
+          subjects: string[]
+          teaching_level: string | null
+          updated_at: string
+        }
+        Insert: {
+          achievements?: string[]
+          bio?: string | null
+          certifications?: Json
+          created_at?: string
+          department?: string | null
+          designation: string
+          email?: string | null
+          experiences?: Json
+          facebook_url?: string | null
+          full_name: string
+          id?: string
+          is_published?: boolean
+          languages?: string[]
+          linkedin_url?: string | null
+          phone?: string | null
+          photo_path?: string | null
+          qualifications?: Json
+          resume_path?: string | null
+          skills?: string[]
+          sort_order?: number
+          subjects?: string[]
+          teaching_level?: string | null
+          updated_at?: string
+        }
+        Update: {
+          achievements?: string[]
+          bio?: string | null
+          certifications?: Json
+          created_at?: string
+          department?: string | null
+          designation?: string
+          email?: string | null
+          experiences?: Json
+          facebook_url?: string | null
+          full_name?: string
+          id?: string
+          is_published?: boolean
+          languages?: string[]
+          linkedin_url?: string | null
+          phone?: string | null
+          photo_path?: string | null
+          qualifications?: Json
+          resume_path?: string | null
+          skills?: string[]
+          sort_order?: number
+          subjects?: string[]
+          teaching_level?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

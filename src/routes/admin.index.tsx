@@ -142,7 +142,10 @@ function AdminQueue() {
           <div className="text-xs uppercase tracking-wider text-muted-foreground">Admin · Admissions</div>
           <h1 className="mt-1 font-display text-3xl sm:text-4xl font-semibold">Application queue</h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <Link to="/admin/teachers" className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-elevated px-3.5 py-2 text-sm hover:bg-secondary">
+            Manage teachers
+          </Link>
           <button onClick={load} className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-elevated px-3.5 py-2 text-sm hover:bg-secondary">
             <RefreshCcw className="size-4" /> Refresh
           </button>
