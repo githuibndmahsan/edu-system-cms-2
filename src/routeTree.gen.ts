@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as FacultyRouteImport } from './routes/faculty'
 import { Route as EventsRouteImport } from './routes/events'
+import { Route as CvBuilderRouteImport } from './routes/cv-builder'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AdmissionsRouteImport } from './routes/admissions'
 import { Route as AboutRouteImport } from './routes/about'
@@ -28,6 +29,11 @@ const FacultyRoute = FacultyRouteImport.update({
 const EventsRoute = EventsRouteImport.update({
   id: '/events',
   path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CvBuilderRoute = CvBuilderRouteImport.update({
+  id: '/cv-builder',
+  path: '/cv-builder',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admissions': typeof AdmissionsRoute
   '/contact': typeof ContactRoute
+  '/cv-builder': typeof CvBuilderRoute
   '/events': typeof EventsRoute
   '/faculty': typeof FacultyRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/admissions': typeof AdmissionsRoute
   '/contact': typeof ContactRoute
+  '/cv-builder': typeof CvBuilderRoute
   '/events': typeof EventsRoute
   '/faculty': typeof FacultyRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admissions': typeof AdmissionsRoute
   '/contact': typeof ContactRoute
+  '/cv-builder': typeof CvBuilderRoute
   '/events': typeof EventsRoute
   '/faculty': typeof FacultyRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admissions'
     | '/contact'
+    | '/cv-builder'
     | '/events'
     | '/faculty'
     | '/admin/login'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admissions'
     | '/contact'
+    | '/cv-builder'
     | '/events'
     | '/faculty'
     | '/admin/login'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admissions'
     | '/contact'
+    | '/cv-builder'
     | '/events'
     | '/faculty'
     | '/admin/login'
@@ -152,6 +164,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdmissionsRoute: typeof AdmissionsRoute
   ContactRoute: typeof ContactRoute
+  CvBuilderRoute: typeof CvBuilderRoute
   EventsRoute: typeof EventsRoute
   FacultyRoute: typeof FacultyRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
@@ -173,6 +186,13 @@ declare module '@tanstack/react-router' {
       path: '/events'
       fullPath: '/events'
       preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cv-builder': {
+      id: '/cv-builder'
+      path: '/cv-builder'
+      fullPath: '/cv-builder'
+      preLoaderRoute: typeof CvBuilderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -250,6 +270,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdmissionsRoute: AdmissionsRoute,
   ContactRoute: ContactRoute,
+  CvBuilderRoute: CvBuilderRoute,
   EventsRoute: EventsRoute,
   FacultyRoute: FacultyRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,
