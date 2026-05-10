@@ -18,8 +18,10 @@ export const SCHOOL = {
 export const NAV = [
   { label: "Home", to: "/" },
   { label: "About", to: "/about" },
+  { label: "Faculty", to: "/faculty" },
   { label: "Events", to: "/events" },
   { label: "Admissions", to: "/admissions" },
+  { label: "CV Builder", to: "/cv-builder" },
   { label: "Contact", to: "/contact" },
 ] as const;
 
