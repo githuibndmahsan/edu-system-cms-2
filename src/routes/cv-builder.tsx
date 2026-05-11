@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Plus, Trash2, Download, Sparkles, GraduationCap, Briefcase, Award, Languages as LangIcon, BookOpen, User, Mail, Phone, Linkedin, MapPin, Eye, FileEdit } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DropZone } from "@/components/site/DropZone";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/cv-builder")({
