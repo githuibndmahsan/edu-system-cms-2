@@ -213,18 +213,15 @@ function TeacherEditor({ initial, onClose, onSaved }: { initial: Teacher | null;
           {step === 0 && (
             <>
               <Field label="Profile photo">
-                <div className="flex items-center gap-4">
-                  {photo ? (
-                    <img src={photo} alt="" className="size-20 rounded-2xl object-cover border border-border" />
-                  ) : (
-                    <div className="size-20 rounded-2xl border border-dashed border-border grid place-items-center text-muted-foreground"><Upload className="size-5" /></div>
-                  )}
-                  <div>
-                    <input ref={photoInput} type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && handlePhoto(e.target.files[0])} />
-                    <button onClick={() => photoInput.current?.click()} className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-elevated px-3.5 py-2 text-sm hover:bg-secondary"><Upload className="size-4" /> Upload photo</button>
-                    <p className="text-xs text-muted-foreground mt-1.5">JPG / PNG up to 4MB</p>
-                  </div>
-                </div>
+                <DropZone
+                  accept="image/*"
+                  maxSizeMB={4}
+                  hint="JPG or PNG up to 4MB"
+                  filename={t.photo_path ? "Photo uploaded" : null}
+                  onFile={handlePhoto}
+                  onClear={clearPhoto}
+                  preview={photo ? <img src={photo} alt="" className="size-16 rounded-xl object-cover border border-border" /> : undefined}
+                />
               </Field>
               <Grid2>
                 <Field label="Full name *"><Input value={t.full_name} onChange={(v) => set("full_name", v)} placeholder="Ms. Ayesha Khan" /></Field>
