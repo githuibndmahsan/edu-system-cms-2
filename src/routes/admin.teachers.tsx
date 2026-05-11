@@ -299,11 +299,15 @@ function TeacherEditor({ initial, onClose, onSaved }: { initial: Teacher | null;
                 <ChipsInput items={t.achievements} onChange={(v) => set("achievements", v)} placeholder="Award or recognition…" />
               </Field>
               <Field label="Resume (optional)">
-                <div className="flex items-center gap-3">
-                  <input ref={resumeInput} type="file" accept="application/pdf" hidden onChange={(e) => e.target.files?.[0] && handleResume(e.target.files[0])} />
-                  <button onClick={() => resumeInput.current?.click()} className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-elevated px-3.5 py-2 text-sm hover:bg-secondary"><Upload className="size-4" /> {t.resume_path ? "Replace PDF" : "Upload PDF"}</button>
-                  {t.resume_path && <span className="text-xs text-muted-foreground">Uploaded ✓</span>}
-                </div>
+                <DropZone
+                  accept="application/pdf"
+                  maxSizeMB={8}
+                  hint="PDF up to 8MB"
+                  filename={t.resume_path ? "Resume PDF uploaded" : null}
+                  onFile={handleResume}
+                  onClear={clearResume}
+                  preview={<div className="size-14 rounded-xl bg-secondary grid place-items-center"><FileText className="size-5 text-muted-foreground" /></div>}
+                />
               </Field>
             </>
           )}
