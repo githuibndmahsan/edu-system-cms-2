@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Plus, Pencil, Trash2, Eye, EyeOff, X, Upload, Loader2, Search, GraduationCap, Briefcase, Award, Sparkles, Languages, Trophy, BookOpen, ArrowLeft, Save } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, X, Loader2, Search, GraduationCap, Briefcase, Award, Sparkles, Languages, Trophy, ArrowLeft, Save, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { emptyTeacher, publicPhotoUrl, type Certification, type Experience, type Qualification, type Teacher } from "@/lib/teacher-types";
+import { DropZone } from "@/components/site/DropZone";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/teachers")({ component: AdminTeachersPage });
