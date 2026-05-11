@@ -74,6 +74,25 @@ function CVBuilderPage() {
         {/* Editor */}
         <div className={cn("space-y-5 print:hidden", tab !== "edit" && "hidden lg:block")}>
           <Card title="Personal info" icon={User}>
+            <Field label="Profile photo (optional)">
+              <DropZone
+                accept="image/*"
+                maxSizeMB={4}
+                hint="JPG or PNG up to 4MB — embedded in your CV"
+                filename={cv.photo ? "Photo added" : null}
+                onFile={async (file) => {
+                  const dataUrl = await new Promise<string>((resolve, reject) => {
+                    const r = new FileReader();
+                    r.onload = () => resolve(r.result as string);
+                    r.onerror = () => reject(new Error("Could not read file"));
+                    r.readAsDataURL(file);
+                  });
+                  set("photo", dataUrl);
+                }}
+                onClear={() => set("photo", null)}
+                preview={cv.photo ? <img src={cv.photo} alt="" className="size-16 rounded-xl object-cover border border-border" /> : undefined}
+              />
+            </Field>
             <Grid2>
               <Field label="Full name"><Input value={cv.name} onChange={(v) => set("name", v)} placeholder="Your name" /></Field>
               <Field label="Headline / Title"><Input value={cv.title} onChange={(v) => set("title", v)} placeholder="Mathematics Teacher" /></Field>
