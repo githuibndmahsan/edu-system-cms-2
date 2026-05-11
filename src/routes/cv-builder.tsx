@@ -22,6 +22,7 @@ type Exp = { role: string; org: string; period: string; description: string };
 type Proj = { title: string; description: string };
 
 type CV = {
+  photo: string | null;
   name: string;
   title: string;
   email: string;
@@ -38,6 +39,7 @@ type CV = {
 };
 
 const empty: CV = {
+  photo: null,
   name: "", title: "", email: "", phone: "", location: "", linkedin: "", summary: "",
   education: [], experience: [], skills: [], languages: [], achievements: [], projects: [],
 };
