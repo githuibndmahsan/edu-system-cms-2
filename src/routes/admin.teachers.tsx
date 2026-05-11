@@ -133,29 +133,35 @@ function TeacherEditor({ initial, onClose, onSaved }: { initial: Teacher | null;
   const [t, setT] = useState(() => initial ? { ...initial } : { ...emptyTeacher(), id: "" } as any);
   const [saving, setSaving] = useState(false);
   const [step, setStep] = useState(0);
-  const photoInput = useRef<HTMLInputElement>(null);
-  const resumeInput = useRef<HTMLInputElement>(null);
 
   const set = <K extends keyof Teacher>(k: K, v: Teacher[K]) => setT((s: Teacher) => ({ ...s, [k]: v }));
 
   const handlePhoto = async (file: File) => {
-    if (file.size > 4 * 1024 * 1024) { alert("Max 4MB"); return; }
     const ext = file.name.split(".").pop();
     const path = `${crypto.randomUUID()}.${ext}`;
     const { error } = await supabase.storage.from("teacher-photos").upload(path, file, { upsert: false });
-    if (error) { alert(error.message); return; }
+    if (error) throw new Error(error.message);
     if (t.photo_path) await supabase.storage.from("teacher-photos").remove([t.photo_path]);
     set("photo_path", path);
   };
 
+  const clearPhoto = async () => {
+    if (t.photo_path) await supabase.storage.from("teacher-photos").remove([t.photo_path]);
+    set("photo_path", null);
+  };
+
   const handleResume = async (file: File) => {
-    if (file.size > 8 * 1024 * 1024) { alert("Max 8MB"); return; }
     const ext = file.name.split(".").pop();
     const path = `${crypto.randomUUID()}.${ext}`;
     const { error } = await supabase.storage.from("teacher-resumes").upload(path, file, { upsert: false });
-    if (error) { alert(error.message); return; }
+    if (error) throw new Error(error.message);
     if (t.resume_path) await supabase.storage.from("teacher-resumes").remove([t.resume_path]);
     set("resume_path", path);
+  };
+
+  const clearResume = async () => {
+    if (t.resume_path) await supabase.storage.from("teacher-resumes").remove([t.resume_path]);
+    set("resume_path", null);
   };
 
   const save = async () => {
