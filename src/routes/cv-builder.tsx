@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Plus, Trash2, Download, Sparkles, GraduationCap, Briefcase, Award, Languages as LangIcon, BookOpen, User, Mail, Phone, Linkedin, MapPin, Eye, FileEdit } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DropZone } from "@/components/site/DropZone";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/cv-builder")({
@@ -21,6 +22,7 @@ type Exp = { role: string; org: string; period: string; description: string };
 type Proj = { title: string; description: string };
 
 type CV = {
+  photo: string | null;
   name: string;
   title: string;
   email: string;
@@ -37,6 +39,7 @@ type CV = {
 };
 
 const empty: CV = {
+  photo: null,
   name: "", title: "", email: "", phone: "", location: "", linkedin: "", summary: "",
   education: [], experience: [], skills: [], languages: [], achievements: [], projects: [],
 };
@@ -71,6 +74,25 @@ function CVBuilderPage() {
         {/* Editor */}
         <div className={cn("space-y-5 print:hidden", tab !== "edit" && "hidden lg:block")}>
           <Card title="Personal info" icon={User}>
+            <Field label="Profile photo (optional)">
+              <DropZone
+                accept="image/*"
+                maxSizeMB={4}
+                hint="JPG or PNG up to 4MB — embedded in your CV"
+                filename={cv.photo ? "Photo added" : null}
+                onFile={async (file) => {
+                  const dataUrl = await new Promise<string>((resolve, reject) => {
+                    const r = new FileReader();
+                    r.onload = () => resolve(r.result as string);
+                    r.onerror = () => reject(new Error("Could not read file"));
+                    r.readAsDataURL(file);
+                  });
+                  set("photo", dataUrl);
+                }}
+                onClear={() => set("photo", null)}
+                preview={cv.photo ? <img src={cv.photo} alt="" className="size-16 rounded-xl object-cover border border-border" /> : undefined}
+              />
+            </Field>
             <Grid2>
               <Field label="Full name"><Input value={cv.name} onChange={(v) => set("name", v)} placeholder="Your name" /></Field>
               <Field label="Headline / Title"><Input value={cv.title} onChange={(v) => set("title", v)} placeholder="Mathematics Teacher" /></Field>
@@ -148,14 +170,19 @@ function CVBuilderPage() {
 function CVPreview({ cv }: { cv: CV }) {
   return (
     <div id="cv-print-area" className="mx-auto bg-white text-black rounded-3xl border border-border shadow-[var(--shadow-elevated)] overflow-hidden print:rounded-none print:shadow-none print:border-0 max-w-[820px]">
-      <div className="bg-[image:var(--gradient-primary)] text-primary-foreground px-8 py-7">
-        <h1 className="font-display text-3xl font-semibold">{cv.name || "Your name"}</h1>
-        <p className="text-base opacity-90 mt-1">{cv.title || "Professional title"}</p>
-        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1.5 text-xs opacity-95">
-          {cv.email && <span className="inline-flex items-center gap-1.5"><Mail className="size-3.5" />{cv.email}</span>}
-          {cv.phone && <span className="inline-flex items-center gap-1.5"><Phone className="size-3.5" />{cv.phone}</span>}
-          {cv.location && <span className="inline-flex items-center gap-1.5"><MapPin className="size-3.5" />{cv.location}</span>}
-          {cv.linkedin && <span className="inline-flex items-center gap-1.5"><Linkedin className="size-3.5" />{cv.linkedin}</span>}
+      <div className="bg-[image:var(--gradient-primary)] text-primary-foreground px-8 py-7 flex items-center gap-5">
+        {cv.photo && (
+          <img src={cv.photo} alt="" className="size-20 rounded-2xl object-cover ring-2 ring-white/40 shadow-md shrink-0 print:ring-0" />
+        )}
+        <div className="min-w-0 flex-1">
+          <h1 className="font-display text-3xl font-semibold">{cv.name || "Your name"}</h1>
+          <p className="text-base opacity-90 mt-1">{cv.title || "Professional title"}</p>
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1.5 text-xs opacity-95">
+            {cv.email && <span className="inline-flex items-center gap-1.5"><Mail className="size-3.5" />{cv.email}</span>}
+            {cv.phone && <span className="inline-flex items-center gap-1.5"><Phone className="size-3.5" />{cv.phone}</span>}
+            {cv.location && <span className="inline-flex items-center gap-1.5"><MapPin className="size-3.5" />{cv.location}</span>}
+            {cv.linkedin && <span className="inline-flex items-center gap-1.5"><Linkedin className="size-3.5" />{cv.linkedin}</span>}
+          </div>
         </div>
       </div>
 

@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Plus, Pencil, Trash2, Eye, EyeOff, X, Upload, Loader2, Search, GraduationCap, Briefcase, Award, Sparkles, Languages, Trophy, BookOpen, ArrowLeft, Save } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, X, Loader2, Search, GraduationCap, Briefcase, Award, Sparkles, Languages, Trophy, ArrowLeft, Save, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { emptyTeacher, publicPhotoUrl, type Certification, type Experience, type Qualification, type Teacher } from "@/lib/teacher-types";
+import { DropZone } from "@/components/site/DropZone";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/teachers")({ component: AdminTeachersPage });
@@ -132,29 +133,35 @@ function TeacherEditor({ initial, onClose, onSaved }: { initial: Teacher | null;
   const [t, setT] = useState(() => initial ? { ...initial } : { ...emptyTeacher(), id: "" } as any);
   const [saving, setSaving] = useState(false);
   const [step, setStep] = useState(0);
-  const photoInput = useRef<HTMLInputElement>(null);
-  const resumeInput = useRef<HTMLInputElement>(null);
 
   const set = <K extends keyof Teacher>(k: K, v: Teacher[K]) => setT((s: Teacher) => ({ ...s, [k]: v }));
 
   const handlePhoto = async (file: File) => {
-    if (file.size > 4 * 1024 * 1024) { alert("Max 4MB"); return; }
     const ext = file.name.split(".").pop();
     const path = `${crypto.randomUUID()}.${ext}`;
     const { error } = await supabase.storage.from("teacher-photos").upload(path, file, { upsert: false });
-    if (error) { alert(error.message); return; }
+    if (error) throw new Error(error.message);
     if (t.photo_path) await supabase.storage.from("teacher-photos").remove([t.photo_path]);
     set("photo_path", path);
   };
 
+  const clearPhoto = async () => {
+    if (t.photo_path) await supabase.storage.from("teacher-photos").remove([t.photo_path]);
+    set("photo_path", null);
+  };
+
   const handleResume = async (file: File) => {
-    if (file.size > 8 * 1024 * 1024) { alert("Max 8MB"); return; }
     const ext = file.name.split(".").pop();
     const path = `${crypto.randomUUID()}.${ext}`;
     const { error } = await supabase.storage.from("teacher-resumes").upload(path, file, { upsert: false });
-    if (error) { alert(error.message); return; }
+    if (error) throw new Error(error.message);
     if (t.resume_path) await supabase.storage.from("teacher-resumes").remove([t.resume_path]);
     set("resume_path", path);
+  };
+
+  const clearResume = async () => {
+    if (t.resume_path) await supabase.storage.from("teacher-resumes").remove([t.resume_path]);
+    set("resume_path", null);
   };
 
   const save = async () => {
@@ -206,18 +213,15 @@ function TeacherEditor({ initial, onClose, onSaved }: { initial: Teacher | null;
           {step === 0 && (
             <>
               <Field label="Profile photo">
-                <div className="flex items-center gap-4">
-                  {photo ? (
-                    <img src={photo} alt="" className="size-20 rounded-2xl object-cover border border-border" />
-                  ) : (
-                    <div className="size-20 rounded-2xl border border-dashed border-border grid place-items-center text-muted-foreground"><Upload className="size-5" /></div>
-                  )}
-                  <div>
-                    <input ref={photoInput} type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && handlePhoto(e.target.files[0])} />
-                    <button onClick={() => photoInput.current?.click()} className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-elevated px-3.5 py-2 text-sm hover:bg-secondary"><Upload className="size-4" /> Upload photo</button>
-                    <p className="text-xs text-muted-foreground mt-1.5">JPG / PNG up to 4MB</p>
-                  </div>
-                </div>
+                <DropZone
+                  accept="image/*"
+                  maxSizeMB={4}
+                  hint="JPG or PNG up to 4MB"
+                  filename={t.photo_path ? "Photo uploaded" : null}
+                  onFile={handlePhoto}
+                  onClear={clearPhoto}
+                  preview={photo ? <img src={photo} alt="" className="size-16 rounded-xl object-cover border border-border" /> : undefined}
+                />
               </Field>
               <Grid2>
                 <Field label="Full name *"><Input value={t.full_name} onChange={(v) => set("full_name", v)} placeholder="Ms. Ayesha Khan" /></Field>
@@ -295,11 +299,15 @@ function TeacherEditor({ initial, onClose, onSaved }: { initial: Teacher | null;
                 <ChipsInput items={t.achievements} onChange={(v) => set("achievements", v)} placeholder="Award or recognition…" />
               </Field>
               <Field label="Resume (optional)">
-                <div className="flex items-center gap-3">
-                  <input ref={resumeInput} type="file" accept="application/pdf" hidden onChange={(e) => e.target.files?.[0] && handleResume(e.target.files[0])} />
-                  <button onClick={() => resumeInput.current?.click()} className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-elevated px-3.5 py-2 text-sm hover:bg-secondary"><Upload className="size-4" /> {t.resume_path ? "Replace PDF" : "Upload PDF"}</button>
-                  {t.resume_path && <span className="text-xs text-muted-foreground">Uploaded ✓</span>}
-                </div>
+                <DropZone
+                  accept="application/pdf"
+                  maxSizeMB={8}
+                  hint="PDF up to 8MB"
+                  filename={t.resume_path ? "Resume PDF uploaded" : null}
+                  onFile={handleResume}
+                  onClear={clearResume}
+                  preview={<div className="size-14 rounded-xl bg-secondary grid place-items-center"><FileText className="size-5 text-muted-foreground" /></div>}
+                />
               </Field>
             </>
           )}
