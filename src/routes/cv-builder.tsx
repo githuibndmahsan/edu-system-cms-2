@@ -170,14 +170,19 @@ function CVBuilderPage() {
 function CVPreview({ cv }: { cv: CV }) {
   return (
     <div id="cv-print-area" className="mx-auto bg-white text-black rounded-3xl border border-border shadow-[var(--shadow-elevated)] overflow-hidden print:rounded-none print:shadow-none print:border-0 max-w-[820px]">
-      <div className="bg-[image:var(--gradient-primary)] text-primary-foreground px-8 py-7">
-        <h1 className="font-display text-3xl font-semibold">{cv.name || "Your name"}</h1>
-        <p className="text-base opacity-90 mt-1">{cv.title || "Professional title"}</p>
-        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1.5 text-xs opacity-95">
-          {cv.email && <span className="inline-flex items-center gap-1.5"><Mail className="size-3.5" />{cv.email}</span>}
-          {cv.phone && <span className="inline-flex items-center gap-1.5"><Phone className="size-3.5" />{cv.phone}</span>}
-          {cv.location && <span className="inline-flex items-center gap-1.5"><MapPin className="size-3.5" />{cv.location}</span>}
-          {cv.linkedin && <span className="inline-flex items-center gap-1.5"><Linkedin className="size-3.5" />{cv.linkedin}</span>}
+      <div className="bg-[image:var(--gradient-primary)] text-primary-foreground px-8 py-7 flex items-center gap-5">
+        {cv.photo && (
+          <img src={cv.photo} alt="" className="size-20 rounded-2xl object-cover ring-2 ring-white/40 shadow-md shrink-0 print:ring-0" />
+        )}
+        <div className="min-w-0 flex-1">
+          <h1 className="font-display text-3xl font-semibold">{cv.name || "Your name"}</h1>
+          <p className="text-base opacity-90 mt-1">{cv.title || "Professional title"}</p>
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1.5 text-xs opacity-95">
+            {cv.email && <span className="inline-flex items-center gap-1.5"><Mail className="size-3.5" />{cv.email}</span>}
+            {cv.phone && <span className="inline-flex items-center gap-1.5"><Phone className="size-3.5" />{cv.phone}</span>}
+            {cv.location && <span className="inline-flex items-center gap-1.5"><MapPin className="size-3.5" />{cv.location}</span>}
+            {cv.linkedin && <span className="inline-flex items-center gap-1.5"><Linkedin className="size-3.5" />{cv.linkedin}</span>}
+          </div>
         </div>
       </div>
 
